@@ -13,7 +13,7 @@ const loginAPIUrl = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod
 const SignIn = (props) => {
 
     let navigate = useNavigate();
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errorMessage, setErrorMessage] = useState(null)
 
@@ -24,13 +24,13 @@ const SignIn = (props) => {
 
 
 
-        if (username.trim() === '' || password.trim() === '') {
+        if (email.trim() === '' || password.trim() === '') {
             setErrorMessage('Todos os campos devem ser preenchidos.')
             return;
         }
         setErrorMessage(null)
 
-        authenticate(username, password)
+        authenticate(email, password)
             .then(data => {
                 console.log("logado!", data)
                 navigate("/email")
@@ -46,7 +46,7 @@ const SignIn = (props) => {
             }
         }
         const requestBody = {
-            username: username,
+            email: email,
             password: password
         }
 
@@ -75,12 +75,12 @@ const SignIn = (props) => {
                             type="text"
                             className="input"
                             placeholder="a"
-                            name='username'
-                            value={username}
-                            onChange={(event) => setUsername(event.target.value)}
+                            name='email'
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
                         />
                         <label className="label">
-                            Username
+                            Email
                         </label>
                     </div>
 

@@ -66,7 +66,7 @@ function App() {
         </Routes>
       </Account>
 
-    </div>
+    </div >
   );
 }
 

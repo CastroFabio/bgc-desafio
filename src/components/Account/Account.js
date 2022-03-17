@@ -9,8 +9,9 @@ const Account = (props) => {
 
 
     let navigate = useNavigate()
+
     const getSession = async () => {
-        return await new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) => {
             const user = Pool.getCurrentUser()
             if (user) {
                 user.getSession(async (err, session) => {

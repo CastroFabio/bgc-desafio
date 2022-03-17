@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { AccountContext } from '../Account/Account';
+import { setUserSession } from '../../service/AuthService';
 import UserPool from '../SignIn/UserPool';
 import axios from 'axios';
 
@@ -27,29 +29,34 @@ const SignUp = () => {
         }
         setMessage(null)
 
-
-        UserPool.signUp(username, password, [], null, (err, data) => {
+        UserPool.signUp(email, password, [], null, (err, data) => {
             if (err) {
                 console.error(err)
                 return
             }
             console.log(data)
             navigate("/email")
+            return
         })
-
 
         const requestConfig = {
             headers: {
                 'x-api-key': 'XJ7L4iWT9i6DjS2CDQpbr1Kd3ZpQsWW81xUGVrcX'
             }
         }
+
         const requestBody = {
             username: username,
             email: email,
             name: name,
             password: password
         }
+
+
+
+
         axios.post(registerUrl, requestBody, requestConfig).then(response => {
+
             setMessage("Sucesso no cadastro.")
 
         }).catch(error => {
@@ -59,6 +66,8 @@ const SignUp = () => {
                 setMessage("Perdão... o backend está com problemas!! Tente novamente mais tarde.")
             }
         })
+
+
 
     }
 
@@ -104,7 +113,6 @@ const SignUp = () => {
                             name='email'
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
-
                         />
                         <label className="label" >
                             Email
