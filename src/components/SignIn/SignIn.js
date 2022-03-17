@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { AccountContext } from '../Account/Account';
 import { setUserSession } from '../../service/AuthService';
 import { useNavigate } from 'react-router-dom';
-import UserPool from '../SignIn/UserPool'
 import axios from 'axios';
 
-import "./SignIn.scss";
+import "./SignIn.css";
 
 const loginAPIUrl = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod/login";
 
@@ -17,14 +17,27 @@ const SignIn = (props) => {
     const [password, setPassword] = useState("")
     const [errorMessage, setErrorMessage] = useState(null)
 
+    const { authenticate } = useContext(AccountContext)
+
     const onSubmit = (event) => {
         event.preventDefault();
+
+
 
         if (username.trim() === '' || password.trim() === '') {
             setErrorMessage('Todos os campos devem ser preenchidos.')
             return;
         }
         setErrorMessage(null)
+
+        authenticate(username, password)
+            .then(data => {
+                console.log("logado!", data)
+                navigate("/email")
+            })
+            .catch(err => {
+                console.error("Falhou em logar", err)
+            })
 
         const requestConfig = {
             headers: {
@@ -38,9 +51,8 @@ const SignIn = (props) => {
 
         axios.post(loginAPIUrl, requestBody, requestConfig).then(response => {
             setUserSession(response.data.user, response.data.token)
-            setErrorMessage('entrou')
 
-            navigate("/email")
+
         }).catch(error => {
             if (error.response.status === 401 || error.response.status === 403) {
                 setErrorMessage(error.response.data.message)
@@ -48,14 +60,6 @@ const SignIn = (props) => {
                 setErrorMessage("Perdão... o backend está com problemas!! Tente novamente mais tarde.")
             }
         })
-
-
-        /* UserPool.signUp(email, password, [], null, (err, data) => {
-            if (err) {
-                console.error(err)
-            }
-            console.log(data)
-        }) */
     }
 
     return (
@@ -63,6 +67,7 @@ const SignIn = (props) => {
             <div className="signupFrm">
                 <form onSubmit={onSubmit} className="form">
                     <h1 className="title">Login</h1>
+
 
                     <div className="inputContainer">
                         <input
@@ -73,10 +78,7 @@ const SignIn = (props) => {
                             value={username}
                             onChange={(event) => setUsername(event.target.value)}
                         />
-                        <label
-                            for=""
-                            className="label"
-                        >
+                        <label className="label">
                             Username
                         </label>
                     </div>
@@ -90,20 +92,15 @@ const SignIn = (props) => {
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
                         />
-                        <label
-                            for=""
-                            className="label"
-                        >
+                        <label className="label" >
                             Password
                         </label>
                     </div>
 
-                    <button
-                        className='submitBtn'
-                        type='submit'
-                    >
+                    <button className='submitBtn' type='submit' >
                         Login
                     </button>
+                    <br />
                     {errorMessage && <p className="">{errorMessage}</p>}
                 </form>
 

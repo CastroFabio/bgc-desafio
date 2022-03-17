@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import UserPool from '../SignIn/UserPool'
+import { useNavigate } from 'react-router-dom';
+import UserPool from '../SignIn/UserPool';
 import axios from 'axios';
 
-import "./SignUp.scss";
+import "./SignUp.css";
 
 const registerUrl = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod/register";
 
@@ -10,6 +11,7 @@ const registerUrl = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod
 
 const SignUp = () => {
 
+    let navigate = useNavigate();
     const [name, setName] = useState("")
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("");
@@ -25,6 +27,15 @@ const SignUp = () => {
         }
         setMessage(null)
 
+
+        UserPool.signUp(username, password, [], null, (err, data) => {
+            if (err) {
+                console.error(err)
+            }
+            console.log(data)
+        })
+
+
         const requestConfig = {
             headers: {
                 'x-api-key': 'XJ7L4iWT9i6DjS2CDQpbr1Kd3ZpQsWW81xUGVrcX'
@@ -38,6 +49,7 @@ const SignUp = () => {
         }
         axios.post(registerUrl, requestBody, requestConfig).then(response => {
             setMessage("Sucesso no cadastro.")
+            navigate("/email")
         }).catch(error => {
             if (error.response.status === 401 || error.response.status === 403) {
                 setMessage(error.response.data.message)
@@ -46,13 +58,6 @@ const SignUp = () => {
             }
         })
 
-
-        /* UserPool.signUp(email, password, [], null, (err, data) => {
-            if (err) {
-                console.error(err)
-            }
-            console.log(data)
-        }) */
     }
 
     return (
@@ -70,10 +75,7 @@ const SignUp = () => {
                             value={name}
                             onChange={(event) => setName(event.target.value)}
                         />
-                        <label
-                            for=""
-                            className="label"
-                        >
+                        <label className="label" >
                             Name
                         </label>
                     </div>
@@ -87,10 +89,7 @@ const SignUp = () => {
                             value={username}
                             onChange={(event) => setUsername(event.target.value)}
                         />
-                        <label
-                            for=""
-                            className="label"
-                        >
+                        <label className="label" >
                             Username
                         </label>
                     </div>
@@ -105,10 +104,7 @@ const SignUp = () => {
                             onChange={(event) => setEmail(event.target.value)}
 
                         />
-                        <label
-                            for=""
-                            className="label"
-                        >
+                        <label className="label" >
                             Email
                         </label>
                     </div>
@@ -122,24 +118,18 @@ const SignUp = () => {
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
                         />
-                        <label
-                            for=""
-                            className="label"
-                        >
+                        <label className="label" >
                             Password
                         </label>
                     </div>
 
 
-                    <button
-                        className='submitBtn'
-                        type='submit'
-                    >
+                    <button className='submitBtn' type='submit'>
                         Sign Up
                     </button>
-                    {message && <p className="message">{message}</p>}
+                    <br />
+                    {message && <span className="message">{message}</span>}
                 </form>
-
             </div>
         </div >
     )

@@ -7,6 +7,8 @@ import { Route, Routes } from 'react-router-dom';
 import SignIn from './components/SignIn/SignIn';
 import { getUser, getToken, setUserSession, resetUserSession } from './service/AuthService';
 import axios from 'axios';
+import { Account } from './components/Account/Account';
+import Status from './components/Account/Status';
 
 
 const verifyTokenAPIURL = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod/verify"
@@ -47,13 +49,16 @@ function App() {
 
   return (
     <div className="App">
-      <Routes>
-        <Route path='/' element={<Navigation />} >
-          <Route path='/SignIn' element={<SignIn />} />
-          <Route path='/SignUp' element={<SignUp />} />
-          <Route path='/Email' element={<EmailForm />} />
-        </Route>
-      </Routes>
+      <Account>
+        <Status />
+        <Routes>
+          <Route path='/' element={<Navigation />} >
+            <Route path='/SignIn' element={<SignIn />} />
+            <Route path='/SignUp' element={<SignUp />} />
+            <Route path='/Email' element={<EmailForm />} />
+          </Route>
+        </Routes>
+      </Account>
 
       {/* <Logo /> */}
 
