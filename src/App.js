@@ -9,6 +9,8 @@ import { getUser, getToken, setUserSession, resetUserSession } from './service/A
 import axios from 'axios';
 import { Account } from './components/Account/Account';
 import Status from './components/Account/Status';
+import Settings from './components/Account/Settings';
+import ProtectedRoutes from './routes/ProtectedRoutes/ProtectedRoutes';
 
 
 const verifyTokenAPIURL = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod/verify"
@@ -53,16 +55,16 @@ function App() {
         <Status />
         <Routes>
           <Route path='/' element={<Navigation />} >
+            {/* <Route path='/' element={<Status />} /> */}
             <Route path='/SignIn' element={<SignIn />} />
             <Route path='/SignUp' element={<SignUp />} />
-            <Route path='/Email' element={<EmailForm />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path='/Email' element={<EmailForm />} />
+              <Route path='/Settings' element={<Settings />} />
+            </Route>
           </Route>
         </Routes>
       </Account>
-
-      {/* <Logo /> */}
-
-      {/* <EmailHistory /> */}
 
     </div>
   );

@@ -31,8 +31,10 @@ const SignUp = () => {
         UserPool.signUp(username, password, [], null, (err, data) => {
             if (err) {
                 console.error(err)
+                return
             }
             console.log(data)
+            navigate("/email")
         })
 
 
@@ -49,7 +51,7 @@ const SignUp = () => {
         }
         axios.post(registerUrl, requestBody, requestConfig).then(response => {
             setMessage("Sucesso no cadastro.")
-            navigate("/email")
+
         }).catch(error => {
             if (error.response.status === 401 || error.response.status === 403) {
                 setMessage(error.response.data.message)

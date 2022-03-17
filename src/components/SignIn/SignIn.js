@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, Fragment } from 'react'
 import { AccountContext } from '../Account/Account';
 import { setUserSession } from '../../service/AuthService';
 import { useNavigate } from 'react-router-dom';
@@ -34,6 +34,7 @@ const SignIn = (props) => {
             .then(data => {
                 console.log("logado!", data)
                 navigate("/email")
+                window.location.reload(false);
             })
             .catch(err => {
                 console.error("Falhou em logar", err)
@@ -63,7 +64,7 @@ const SignIn = (props) => {
     }
 
     return (
-        <div>
+        <Fragment>
             <div className="signupFrm">
                 <form onSubmit={onSubmit} className="form">
                     <h1 className="title">Login</h1>
@@ -105,7 +106,7 @@ const SignIn = (props) => {
                 </form>
 
             </div>
-        </div >
+        </Fragment >
     )
 
 }

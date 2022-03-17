@@ -3,6 +3,7 @@ import { AccountContext } from './Account'
 
 
 const Status = () => {
+
     const [status, setStatus] = useState(false)
 
     const { getSession, logout } = useContext(AccountContext)
@@ -19,9 +20,10 @@ const Status = () => {
     return (
         <div>
             {
-                status ?
-                    <button onClick={logout}>Logout</button> :
-                    ""}
+                status
+                    ? <button onClick={logout}>Logout</button>
+                    : ""
+            }
         </div>
     )
 }
