@@ -1,29 +1,30 @@
 import React, { useState } from 'react'
+import { setUserSession } from '../../service/AuthService';
+import { useNavigate } from 'react-router-dom';
 import UserPool from '../SignIn/UserPool'
 import axios from 'axios';
 
-import "./SignUp.scss";
+import "./SignIn.scss";
 
-const registerUrl = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod/register";
+const loginAPIUrl = "https://lu43u7gbml.execute-api.sa-east-1.amazonaws.com/prod/login";
 
 
 
-const SignUp = () => {
+const SignIn = (props) => {
 
-    const [name, setName] = useState("")
+    let navigate = useNavigate();
     const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
-    const [message, setMessage] = useState(null)
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const onSubmit = (event) => {
         event.preventDefault();
 
-        if (username.trim() === '' || email.trim() === '' || name.trim() === '' || password.trim() === '') {
-            setMessage('Todos os campos devem ser preenchidos.')
+        if (username.trim() === '' || password.trim() === '') {
+            setErrorMessage('Todos os campos devem ser preenchidos.')
             return;
         }
-        setMessage(null)
+        setErrorMessage(null)
 
         const requestConfig = {
             headers: {
@@ -32,17 +33,19 @@ const SignUp = () => {
         }
         const requestBody = {
             username: username,
-            email: email,
-            name: name,
             password: password
         }
-        axios.post(registerUrl, requestBody, requestConfig).then(response => {
-            setMessage("Sucesso no cadastro.")
+
+        axios.post(loginAPIUrl, requestBody, requestConfig).then(response => {
+            setUserSession(response.data.user, response.data.token)
+            setErrorMessage('entrou')
+
+            navigate("/email")
         }).catch(error => {
             if (error.response.status === 401 || error.response.status === 403) {
-                setMessage(error.response.data.message)
+                setErrorMessage(error.response.data.message)
             } else {
-                setMessage("Perdão... o backend está com problemas!! Tente novamente mais tarde.")
+                setErrorMessage("Perdão... o backend está com problemas!! Tente novamente mais tarde.")
             }
         })
 
@@ -59,24 +62,7 @@ const SignUp = () => {
         <div>
             <div className="signupFrm">
                 <form onSubmit={onSubmit} className="form">
-                    <h1 className="title">Cadastro</h1>
-
-                    <div className="inputContainer">
-                        <input
-                            type="text"
-                            className="input"
-                            placeholder="a"
-                            name='name'
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                        />
-                        <label
-                            for=""
-                            className="label"
-                        >
-                            Name
-                        </label>
-                    </div>
+                    <h1 className="title">Login</h1>
 
                     <div className="inputContainer">
                         <input
@@ -97,24 +83,6 @@ const SignUp = () => {
 
                     <div className="inputContainer">
                         <input
-                            type="email"
-                            className="input"
-                            placeholder="a"
-                            name='email'
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
-
-                        />
-                        <label
-                            for=""
-                            className="label"
-                        >
-                            Email
-                        </label>
-                    </div>
-
-                    <div className="inputContainer">
-                        <input
                             className="input"
                             placeholder="a"
                             type="password"
@@ -130,19 +98,19 @@ const SignUp = () => {
                         </label>
                     </div>
 
-
                     <button
                         className='submitBtn'
                         type='submit'
                     >
-                        Sign Up
+                        Login
                     </button>
-                    {message && <p className="message">{message}</p>}
+                    {errorMessage && <p className="">{errorMessage}</p>}
                 </form>
 
             </div>
         </div >
     )
+
 }
 
-export default SignUp
+export default SignIn

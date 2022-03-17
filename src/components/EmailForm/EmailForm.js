@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import './EmailForm.css'
 import emailjs from '@emailjs/browser';
 
+
 const EmailForm = () => {
 
     const form = useRef()
@@ -26,7 +27,7 @@ const EmailForm = () => {
                     <input name='nome' type="text" placeholder="Nome" />
                     <input name='emailRemetente' type="email" placeholder="Remetente" />
                     <input name='emailDestinatario' type="email" placeholder="Destinatário" />
-                    <textarea name='mensagem' placeholder="Message..." rows="5"></textarea>
+                    <textarea name='mensagem' placeholder="Messagem..." rows="5"></textarea>
                     <button className='btn animating' type="submit" href="/">Submit</button>
                 </div>
             </form>
